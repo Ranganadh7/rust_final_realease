@@ -27,14 +27,16 @@ struct Args {
 }
 
 // Shared state for IP and Port blocklists
+/// Struct to hold blocklist and state for blocked IPs and ports.
 struct SharedState {
-    ip_blocklist: HashMap<MapData, u32, u32>,
-    port_blocklist: HashMap<MapData, u16, u16>,
+    ip_blocklist: HashMap<MapData, u32, u32>, // HashMap for IP blocklist
+    port_blocklist: HashMap<MapData, u16, u16>, // HashMap for Port blocklist
     known_ips: HashSet<u32>, // To track currently blocked IPs
     known_ports: HashSet<u16>, // To track currently blocked Ports
 }
+/// Entry point for asynchronous execution
 
-#[tokio::main]
+#[tokio::main]  
 async fn main() -> Result<()> {
     env_logger::init();  // Initialize logging
 
@@ -126,6 +128,7 @@ async fn main() -> Result<()> {
 }
 
 /// Process the blocklist file and update BPF maps
+/// This function reads the contents of the blocklist file, parses each line, and updates the blocklists accordingly.
 fn process_file(file_path: &str, state: Arc<Mutex<SharedState>>) -> anyhow::Result<()> {
     let contents = fs::read_to_string(file_path)?;
     let mut state = state.lock().unwrap();
